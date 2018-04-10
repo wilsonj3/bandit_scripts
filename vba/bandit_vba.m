@@ -31,7 +31,12 @@ use_reward_vec = parameterization.use_reward_vec;
 %     valence = 1;
 % elseif nargin<8		
 %     %if we are fixing the parameters		
-%     fix_all_params = 0; %This should really really be an extrenal variable, make this happen.		
+
+    
+elseif valence && regret
+    n_theta = 4;
+    options.inF.valence = 1;
+    options.inF.regret = 1;%     fix_all_params = 0; %This should really really be an extrenal variable, make this happen.		
 % end
 
 
@@ -40,6 +45,7 @@ use_reward_vec = parameterization.use_reward_vec;
 
 %If we only want to use the first 150 trials
 use_first_150 = 0;
+
 
 
 %% Where to look for data
@@ -65,10 +71,15 @@ if ~graphics
     options.GnFigs = 0;
 end
 %% set up dim defaults
-if valence && ~disappointment
+if valence && ~disappointment && ~regret
     n_theta = 3; %Number of evolution params (AlphaWin AlphaLoss LossDecay WinDecay)
     options.inF.valence = 1;
     options.inF.disappointment= 0;
+
+elseif valence && regret
+    n_theta = 4;
+    options.inF.valence = 1;
+    options.inF.regret = 1;
 
 elseif valence && disappointment
     n_theta = 4; %Number of evolution params (AlphaWin AlphaLoss LossDecay WinDecay)

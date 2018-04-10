@@ -42,6 +42,7 @@ use_reward_vec = parameterization.use_reward_vec;
 use_first_150 = 0;
 
 
+
 %% Where to look for data
 %Quick username check, and path setting
 
@@ -65,10 +66,15 @@ if ~graphics
     options.GnFigs = 0;
 end
 %% set up dim defaults
-if valence && ~disappointment
+if valence && ~disappointment && ~regret
     n_theta = 3; %Number of evolution params (AlphaWin AlphaLoss LossDecay WinDecay)
     options.inF.valence = 1;
     options.inF.disappointment= 0;
+
+elseif valence && regret
+    n_theta = 4;
+    options.inF.valence = 1;
+    options.inF.regret = 1;
 
 elseif valence && disappointment
     n_theta = 4; %Number of evolution params (AlphaWin AlphaLoss LossDecay WinDecay)

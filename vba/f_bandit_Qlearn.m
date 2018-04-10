@@ -24,18 +24,25 @@ if in.fixed_params %Fixed paramteres
 end
 
 
+
 if in.fix_decay %This is the fixed version
 %if in.decay %This logic is somewhat confusing... leave for relic vba data for now
     alpha_win = 1./(1+exp(-theta(1))); % learning rate is bounded between 0 and 1.
     alpha_loss = 1./(1+exp(-theta(2))); % learning rate is bounded between 0 and 1.
     decay=0.5;
-elseif in.valence && ~in.disappointment
+elseif in.valence && ~in.disappointment && ~in.regret
     %Params
     alpha_win = 1./(1+exp(-theta(1))); % learning rate is bounded between 0 and 1.
     alpha_loss = 1./(1+exp(-theta(2))); % learning rate is bounded between 0 and 1.
     decay = 1./(1+exp(-theta(3))); % decay is bounded between 0 and 1.
     % loss_decay = 1./(1+exp(-theta(3))); % learning rate is bounded between 0 and 1.
     % win_decay = 1./(1+exp(-theta(4))); % learning rate is bounded between 0 and 1.
+elseif in.valence && in.regret
+    %Params
+    alpha_win = 1./(1+exp(-theta(1))); % learning rate is bounded between 0 and 1.
+    alpha_loss = 1./(1+exp(-theta(2))); % learning rate is bounded between 0 and 1.
+    decay = 1./(1+exp(-theta(3))); % decay is bounded between 0 and 1.
+    omega_r = 1./(1+exp(-theta(4))); % regret is bounded between 0 and 1.
 elseif in.valence && in.disappointment
     %Params
     alpha_win = 1./(1+exp(-theta(1))); % learning rate is bounded between 0 and 1.
@@ -56,6 +63,8 @@ end
 
 if in.disappointment
     r = (1 - omega)*r + omega*(stake - r);
+elseif in.regret
+    r = omega_r*r + (1-omega_r)*(r-max(x));
 end
 
 fx = zeros(length(x),1);
